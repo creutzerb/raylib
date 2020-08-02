@@ -264,7 +264,7 @@ typedef struct NPatchInfo {
     int type;              // layout of the n-patch: 3x3, 1x3 or 3x1
 } NPatchInfo;
 
-// Font character info
+// RayFont character info
 typedef struct CharInfo {
     int value;              // Character value (Unicode)
     int offsetX;            // Character offset X when drawing
@@ -273,16 +273,16 @@ typedef struct CharInfo {
     Image image;            // Character image data
 } CharInfo;
 
-// Font type, includes texture and charSet array data
-typedef struct Font {
+// RayFont type, includes texture and charSet array data
+typedef struct RayFont {
     int baseSize;           // Base size (default chars height)
     int charsCount;         // Number of characters
     Texture2D texture;      // Characters texture atlas
     Rectangle *recs;        // Characters rectangles in texture
     CharInfo *chars;        // Characters info data
-} Font;
+} RayFont;
 
-#define SpriteFont Font     // SpriteFont type fallback, defaults to Font
+#define SpriteFont RayFont     // SpriteFont type fallback, defaults to RayFont
 
 // Camera type, defines a camera position/orientation in 3d space
 typedef struct Camera3D {
@@ -796,7 +796,7 @@ typedef enum {
     WRAP_MIRROR_CLAMP       // Mirrors and clamps to border the texture in tiled mode
 } TextureWrapMode;
 
-// Font type, defines generation method
+// RayFont type, defines generation method
 typedef enum {
     FONT_DEFAULT = 0,       // Default font generation, anti-aliased
     FONT_BITMAP,            // Bitmap font generation, no anti-aliasing
@@ -868,6 +868,8 @@ extern "C" {            // Prevents name mangling of functions
 // Window-related functions
 RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
 RLAPI bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
+RLAPI void next_stroke_point(Vector3 *point);                     // get the next stroke point info and removes it
+RLAPI int get_points_in_stroke(void);                             // get the numbers of stylus points since last frame
 RLAPI void CloseWindow(void);                                     // Close window and unload OpenGL context
 RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
 RLAPI bool IsWindowMinimized(void);                               // Check if window has been minimized
@@ -887,6 +889,7 @@ RLAPI void SetWindowSize(int width, int height);                  // Set window 
 RLAPI void *GetWindowHandle(void);                                // Get native window handle
 RLAPI int GetScreenWidth(void);                                   // Get current screen width
 RLAPI int GetScreenHeight(void);                                  // Get current screen height
+RLAPI int GetNativeWindowX11(void);  
 RLAPI int GetMonitorCount(void);                                  // Get number of connected monitors
 RLAPI int GetMonitorWidth(int monitor);                           // Get primary monitor width
 RLAPI int GetMonitorHeight(int monitor);                          // Get primary monitor height
@@ -1117,7 +1120,7 @@ RLAPI Image GenImageCellular(int width, int height, int tileSize);              
 RLAPI Image ImageCopy(Image image);                                                                      // Create an image duplicate (useful for transformations)
 RLAPI Image ImageFromImage(Image image, Rectangle rec);                                                  // Create an image from another image piece
 RLAPI Image ImageText(const char *text, int fontSize, Color color);                                      // Create an image from text (default font)
-RLAPI Image ImageTextEx(Font font, const char *text, float fontSize, float spacing, Color tint);         // Create an image from text (custom sprite font)
+RLAPI Image ImageTextEx(RayFont font, const char *text, float fontSize, float spacing, Color tint);         // Create an image from text (custom sprite font)
 RLAPI void ImageFormat(Image *image, int newFormat);                                                     // Convert image data to desired format
 RLAPI void ImageToPOT(Image *image, Color fill);                                                         // Convert image to POT (power-of-two)
 RLAPI void ImageCrop(Image *image, Rectangle crop);                                                      // Crop an image to a defined rectangle
@@ -1161,7 +1164,7 @@ RLAPI void ImageDrawRectangleRec(Image *dst, Rectangle rec, Color color);       
 RLAPI void ImageDrawRectangleLines(Image *dst, Rectangle rec, int thick, Color color);                   // Draw rectangle lines within an image
 RLAPI void ImageDraw(Image *dst, Image src, Rectangle srcRec, Rectangle dstRec, Color tint);             // Draw a source image within a destination image (tint applied to source)
 RLAPI void ImageDrawText(Image *dst, const char *text, int posX, int posY, int fontSize, Color color);   // Draw text (using default font) within an image (destination)
-RLAPI void ImageDrawTextEx(Image *dst, Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
+RLAPI void ImageDrawTextEx(Image *dst, RayFont font, const char *text, Vector2 position, float fontSize, float spacing, Color tint); // Draw text (custom sprite font) within an image (destination)
 
 // Texture loading functions
 // NOTE: These functions require GPU access
@@ -1206,31 +1209,31 @@ RLAPI void SetPixelColor(void *dstPtr, Color color, int format);            // S
 RLAPI int GetPixelDataSize(int width, int height, int format);              // Get pixel data size in bytes for certain format
 
 //------------------------------------------------------------------------------------
-// Font Loading and Text Drawing Functions (Module: text)
+// RayFont Loading and Text Drawing Functions (Module: text)
 //------------------------------------------------------------------------------------
 
-// Font loading/unloading functions
-RLAPI Font GetFontDefault(void);                                                            // Get the default Font
-RLAPI Font LoadFont(const char *fileName);                                                  // Load font from file into GPU memory (VRAM)
-RLAPI Font LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCount);  // Load font from file with extended parameters
-RLAPI Font LoadFontFromImage(Image image, Color key, int firstChar);                        // Load font from Image (XNA style)
+// RayFont loading/unloading functions
+RLAPI RayFont GetFontDefault(void);                                                            // Get the default RayFont
+RLAPI RayFont LoadFont(const char *fileName);                                                  // Load font from file into GPU memory (VRAM)
+RLAPI RayFont LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCount);  // Load font from file with extended parameters
+RLAPI RayFont LoadFontFromImage(Image image, Color key, int firstChar);                        // Load font from Image (XNA style)
 RLAPI CharInfo *LoadFontData(const char *fileName, int fontSize, int *fontChars, int charsCount, int type); // Load font data for further use
 RLAPI Image GenImageFontAtlas(const CharInfo *chars, Rectangle **recs, int charsCount, int fontSize, int padding, int packMethod);  // Generate image font atlas using chars info
-RLAPI void UnloadFont(Font font);                                                           // Unload Font from GPU memory (VRAM)
+RLAPI void UnloadFont(RayFont font);                                                           // Unload RayFont from GPU memory (VRAM)
 
 // Text drawing functions
 RLAPI void DrawFPS(int posX, int posY);                                                     // Shows current FPS
 RLAPI void DrawText(const char *text, int posX, int posY, int fontSize, Color color);       // Draw text (using default font)
-RLAPI void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);                // Draw text using font and additional parameters
-RLAPI void DrawTextRec(Font font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint);   // Draw text using font inside rectangle limits
-RLAPI void DrawTextRecEx(Font font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint,
+RLAPI void DrawTextEx(RayFont font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);                // Draw text using font and additional parameters
+RLAPI void DrawTextRec(RayFont font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint);   // Draw text using font inside rectangle limits
+RLAPI void DrawTextRecEx(RayFont font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint,
                          int selectStart, int selectLength, Color selectTint, Color selectBackTint); // Draw text using font inside rectangle limits with support for text selection
-RLAPI void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float scale, Color tint);   // Draw one character (codepoint)
+RLAPI void DrawTextCodepoint(RayFont font, int codepoint, Vector2 position, float scale, Color tint);   // Draw one character (codepoint)
 
 // Text misc. functions
 RLAPI int MeasureText(const char *text, int fontSize);                                      // Measure string width for default font
-RLAPI Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);    // Measure string size for Font
-RLAPI int GetGlyphIndex(Font font, int codepoint);                                          // Get index position for a unicode character on font
+RLAPI Vector2 MeasureTextEx(RayFont font, const char *text, float fontSize, float spacing);    // Measure string size for RayFont
+RLAPI int GetGlyphIndex(RayFont font, int codepoint);                                          // Get index position for a unicode character on font
 
 // Text strings management functions (no utf8 strings, only byte chars)
 // NOTE: Some strings allocate memory internally for returned strings, just be careful!

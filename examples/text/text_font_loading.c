@@ -1,6 +1,6 @@
 /*******************************************************************************************
 *
-*   raylib [text] example - Font loading
+*   raylib [text] example - RayFont loading
 *
 *   raylib can load fonts from multiple file formats:
 *
@@ -35,12 +35,12 @@ int main(void)
 
     // NOTE: Textures/Fonts MUST be loaded after Window initialization (OpenGL context is required)
 
-    // BMFont (AngelCode) : Font data and image atlas have been generated using external program
-    Font fontBm = LoadFont("resources/pixantiqua.fnt");
+    // BMFont (AngelCode) : RayFont data and image atlas have been generated using external program
+    RayFont fontBm = LoadFont("resources/pixantiqua.fnt");
 
-    // TTF font : Font data and atlas are generated directly from TTF
+    // TTF font : RayFont data and atlas are generated directly from TTF
     // NOTE: We define a font base size of 32 pixels tall and up-to 250 characters
-    Font fontTtf = LoadFontEx("resources/pixantiqua.ttf", 32, 0, 250);
+    RayFont fontTtf = LoadFontEx("resources/pixantiqua.ttf", 32, 0, 250);
 
     bool useTtf = false;
 
@@ -81,8 +81,8 @@ int main(void)
 
     // De-Initialization
     //--------------------------------------------------------------------------------------
-    UnloadFont(fontBm);     // AngelCode Font unloading
-    UnloadFont(fontTtf);    // TTF Font unloading
+    UnloadFont(fontBm);     // AngelCode RayFont unloading
+    UnloadFont(fontTtf);    // TTF RayFont unloading
 
     CloseWindow();          // Close window and OpenGL context
     //--------------------------------------------------------------------------------------

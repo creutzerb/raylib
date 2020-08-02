@@ -203,9 +203,9 @@
     // NOTE: It should be provided by user
     typedef struct Texture2D Texture2D;
 
-    // Font type
+    // RayFont type
     // NOTE: It should be provided by user
-    typedef struct Font Font;
+    typedef struct RayFont RayFont;
 #endif
 
 #if defined(RAYGUI_TEXTBOX_EXTENDED)
@@ -380,7 +380,7 @@ RAYGUIDEF void GuiDisable(void);                                        // Disab
 RAYGUIDEF void GuiLock(void);                                           // Lock gui controls (global state)
 RAYGUIDEF void GuiUnlock(void);                                         // Unlock gui controls (global state)
 RAYGUIDEF void GuiState(int state);                                     // Set gui state (global state)
-RAYGUIDEF void GuiFont(Font font);                                      // Set gui custom font (global state)
+RAYGUIDEF void GuiFont(RayFont font);                                      // Set gui custom font (global state)
 RAYGUIDEF void GuiFade(float alpha);                                    // Set gui controls alpha (global state), alpha goes from 0.0f to 1.0f
 
 // Style set/get functions
@@ -506,7 +506,7 @@ typedef enum { BORDER = 0, BASE, TEXT, OTHER } GuiPropertyElement;
 //----------------------------------------------------------------------------------
 static GuiControlState guiState = GUI_STATE_NORMAL;
 
-static Font guiFont = { 0 };            // NOTE: Highly coupled to raylib
+static RayFont guiFont = { 0 };            // NOTE: Highly coupled to raylib
 static bool guiLocked = false;
 static float guiAlpha = 1.0f;
 
@@ -561,11 +561,11 @@ static void DrawTextureRec(Texture2D texture, Rectangle sourceRec, Vector2 posit
 
 // Text required functions
 //-------------------------------------------------------------------------------
-static Font GetFontDefault(void);   // -- GuiLoadStyleDefault()
-static Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing);                          // -- GetTextWidth(), GuiTextBoxMulti()
-static void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);  // -- GuiDrawText()
+static RayFont GetFontDefault(void);   // -- GuiLoadStyleDefault()
+static Vector2 MeasureTextEx(RayFont font, const char *text, float fontSize, float spacing);                          // -- GetTextWidth(), GuiTextBoxMulti()
+static void DrawTextEx(RayFont font, const char *text, Vector2 position, float fontSize, float spacing, Color tint);  // -- GuiDrawText()
 
-static Font LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCount);  // -- GuiLoadStyle()
+static RayFont LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCount);  // -- GuiLoadStyle()
 //-------------------------------------------------------------------------------
 
 // raylib functions already implemented in raygui
@@ -747,7 +747,7 @@ RAYGUIDEF void GuiUnlock(void) { guiLocked = false; }
 RAYGUIDEF void GuiState(int state) { guiState = (GuiControlState)state; }
 
 // Define custom gui font
-RAYGUIDEF void GuiFont(Font font)
+RAYGUIDEF void GuiFont(RayFont font)
 {
     if (font.texture.id > 0)
     {
@@ -1623,7 +1623,7 @@ enum {
 static int GuiMeasureTextBox(const char *text, int length, Rectangle rec, int *pos, int mode)
 {
     // Get gui font properties
-    const Font font = guiFont;
+    const RayFont font = guiFont;
     const float fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
     const float spacing = GuiGetStyle(DEFAULT, TEXT_SPACING);
     
@@ -1707,7 +1707,7 @@ static int GetPrevCodepoint(const char *text, const char *start, int *prev)
 static int GuiMeasureTextBoxRev(const char *text, int length, Rectangle rec, int *pos)
 {
     // Get gui font properties
-    const Font font = guiFont;
+    const RayFont font = guiFont;
     const float fontSize = GuiGetStyle(DEFAULT, TEXT_SIZE);
     const float spacing = GuiGetStyle(DEFAULT, TEXT_SPACING);
     
@@ -4028,7 +4028,7 @@ RAYGUIDEF void GuiLoadStyle(const char *fileName)
                         char fontFileName[256] = { 0 };
                         sscanf(buffer, "f %d %d %[^\n]s", &fontSize, &fontSpacing, fontFileName);
 
-                        Font font = LoadFontEx(FormatText("%s/%s", GetDirectoryPath(fileName), fontFileName), fontSize, NULL, 0);
+                        RayFont font = LoadFontEx(FormatText("%s/%s", GetDirectoryPath(fileName), fontFileName), fontSize, NULL, 0);
                         
                         if ((font.texture.id > 0) && (font.charsCount > 0))
                         {
@@ -4091,7 +4091,7 @@ RAYGUIDEF void GuiLoadStyle(const char *fileName)
                 else GuiSetStyle((int)controlId, (int)propertyId, propertyValue);
             }
 
-            // Font loading is highly dependant on raylib API to load font data and image
+            // RayFont loading is highly dependant on raylib API to load font data and image
             // TODO: Find some mechanism to support it in standalone mode
 #if !defined(RAYGUI_STANDALONE)
             // Load custom font if available
@@ -4100,7 +4100,7 @@ RAYGUIDEF void GuiLoadStyle(const char *fileName)
 
             if (fontDataSize > 0)
             {
-                Font font = { 0 };
+                RayFont font = { 0 };
                 int fontType = 0;   // 0-Normal, 1-SDF
                 Rectangle whiteRec = { 0 };
 

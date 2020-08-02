@@ -20,7 +20,7 @@
 #endif
 
 GameScreen currentScreen = 0;
-Font font = { 0 };
+RayFont font = { 0 };
 Music music = { 0 };
 Sound fxCoin = { 0 };
 

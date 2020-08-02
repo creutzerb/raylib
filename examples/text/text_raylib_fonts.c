@@ -26,7 +26,7 @@ int main(void)
     InitWindow(screenWidth, screenHeight, "raylib [text] example - raylib fonts");
 
     // NOTE: Textures MUST be loaded after Window initialization (OpenGL context is required)
-    Font fonts[MAX_FONTS] = { 0 };
+    RayFont fonts[MAX_FONTS] = { 0 };
 
     fonts[0] = LoadFont("resources/fonts/alagard.png");
     fonts[1] = LoadFont("resources/fonts/pixelplay.png");

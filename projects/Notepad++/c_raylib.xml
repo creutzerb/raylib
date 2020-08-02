@@ -17,7 +17,7 @@
         <KeyWord name="Image" />
         <KeyWord name="Texture2D" />
         <KeyWord name="RenderTexture2D" />
-        <KeyWord name="Font" />
+        <KeyWord name="RayFont" />
         <KeyWord name="Camera3D" />
         <KeyWord name="Camera2D" />
         <KeyWord name="BoundingBox" />
@@ -965,7 +965,7 @@
         </KeyWord>
         <KeyWord name="ImageTextEx" func="yes">
             <Overload retVal="Image" descr="Create an image from text (custom sprite font)">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="float fontSize" />
                 <Param name="float spacing" />
@@ -1082,7 +1082,7 @@
             <Overload retVal="void" descr="Draw text (custom sprite font) within an image (destination)">
                 <Param name="Image *dst" />
                 <Param name="Vector2 position" />
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="float fontSize" />
                 <Param name="float spacing" />
@@ -1276,20 +1276,20 @@
         </KeyWord>
 
         <!-------------------------------------------------------------------------------------- -->
-        <!-- Font Loading and Text Drawing Functions (Module: text) -->
+        <!-- RayFont Loading and Text Drawing Functions (Module: text) -->
         <!-------------------------------------------------------------------------------------- -->
 
-        <!-- Font loading/unloading functions -->
+        <!-- RayFont loading/unloading functions -->
         <KeyWord name="GetFontDefault" func="yes">
-            <Overload retVal="Font" descr="Get the default Font"></Overload>
+            <Overload retVal="RayFont" descr="Get the default RayFont"></Overload>
         </KeyWord>
         <KeyWord name="LoadFont" func="yes">
-            <Overload retVal="Font" descr="Load font from file into GPU memory (VRAM)">
+            <Overload retVal="RayFont" descr="Load font from file into GPU memory (VRAM)">
                 <Param name="const char *fileName" />
             </Overload>
         </KeyWord>
         <KeyWord name="LoadFontEx" func="yes">
-            <Overload retVal="Font" descr="Load font from file with extended parameters">
+            <Overload retVal="RayFont" descr="Load font from file with extended parameters">
                 <Param name="const char *fileName" />
                 <Param name="int fontSize" />
                 <Param name="int charsCount" />
@@ -1315,8 +1315,8 @@
             </Overload>
         </KeyWord>
         <KeyWord name="UnloadFont" func="yes">
-            <Overload retVal="void" descr="Unload Font from GPU memory (VRAM)">
-                <Param name="Font font" />
+            <Overload retVal="void" descr="Unload RayFont from GPU memory (VRAM)">
+                <Param name="RayFont font" />
             </Overload>
         </KeyWord>
 
@@ -1337,8 +1337,8 @@
             </Overload>
         </KeyWord>
         <KeyWord name="DrawTextEx" func="yes">
-            <Overload retVal="void" descr="Draw text using Font and additional parameters">
-                <Param name="Font font" />
+            <Overload retVal="void" descr="Draw text using RayFont and additional parameters">
+                <Param name="RayFont font" />
                 <Param name="const char* text" />
                 <Param name="Vector2 position" />
                 <Param name="float fontSize" />
@@ -1355,8 +1355,8 @@
             </Overload>
         </KeyWord>
         <KeyWord name="MeasureTextEx" func="yes">
-            <Overload retVal="Vector2" descr="Measure string size for Font">
-                <Param name="Font font" />
+            <Overload retVal="Vector2" descr="Measure string size for RayFont">
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="float fontSize" />
                 <Param name="float spacing" />
@@ -1377,7 +1377,7 @@
         </KeyWord>
         <KeyWord name="GetGlyphIndex" func="yes">
             <Overload retVal="int" descr="Returns index position for a unicode character on sprite font">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="int character" />
             </Overload>
         </KeyWord>

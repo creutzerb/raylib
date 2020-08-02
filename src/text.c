@@ -95,7 +95,7 @@
 #if defined(SUPPORT_DEFAULT_FONT)
 // Default font provided by raylib
 // NOTE: Default font is loaded on InitWindow() and disposed on CloseWindow() [module: core]
-static Font defaultFont = { 0 };
+static RayFont defaultFont = { 0 };
 #endif
 
 //----------------------------------------------------------------------------------
@@ -107,7 +107,7 @@ static Font defaultFont = { 0 };
 // Module specific Functions Declaration
 //----------------------------------------------------------------------------------
 #if defined(SUPPORT_FILEFORMAT_FNT)
-static Font LoadBMFont(const char *fileName);     // Load a BMFont file (AngelCode font file)
+static RayFont LoadBMFont(const char *fileName);     // Load a BMFont file (AngelCode font file)
 #endif
 
 #if defined(SUPPORT_DEFAULT_FONT)
@@ -131,7 +131,7 @@ extern void LoadFontDefault(void)
     defaultFont.charsCount = 224;             // Number of chars included in our default font
 
     // Default font is directly defined here (data generated from a sprite font image)
-    // This way, we reconstruct Font without creating large global variables
+    // This way, we reconstruct RayFont without creating large global variables
     // This data is automatically allocated to Stack and automatically deallocated at the end of this function
     unsigned int defaultFontData[512] = {
         0x00000000, 0x00000000, 0x00000000, 0x00000000, 0x00200020, 0x0001b000, 0x00000000, 0x00000000, 0x8ef92520, 0x00020a00, 0x7dbe8000, 0x1f7df45f,
@@ -279,18 +279,18 @@ extern void UnloadFontDefault(void)
 #endif      // SUPPORT_DEFAULT_FONT
 
 // Get the default font, useful to be used with extended parameters
-Font GetFontDefault()
+RayFont GetFontDefault()
 {
 #if defined(SUPPORT_DEFAULT_FONT)
     return defaultFont;
 #else
-    Font font = { 0 };
+    RayFont font = { 0 };
     return font;
 #endif
 }
 
-// Load Font from file into GPU memory (VRAM)
-Font LoadFont(const char *fileName)
+// Load RayFont from file into GPU memory (VRAM)
+RayFont LoadFont(const char *fileName)
 {
     // Default values for ttf font generation
 #ifndef FONT_TTF_DEFAULT_SIZE
@@ -303,7 +303,7 @@ Font LoadFont(const char *fileName)
     #define FONT_TTF_DEFAULT_FIRST_CHAR     32      // TTF font generation default first char for image sprite font (32-Space)
 #endif
 
-    Font font = { 0 };
+    RayFont font = { 0 };
 
 #if defined(SUPPORT_FILEFORMAT_TTF)
     if (IsFileExtension(fileName, ".ttf;.otf")) font = LoadFontEx(fileName, FONT_TTF_DEFAULT_SIZE, NULL, FONT_TTF_DEFAULT_NUMCHARS);
@@ -329,12 +329,12 @@ Font LoadFont(const char *fileName)
     return font;
 }
 
-// Load Font from TTF font file with generation parameters
+// Load RayFont from TTF font file with generation parameters
 // NOTE: You can pass an array with desired characters, those characters should be available in the font
 // if array is NULL, default char set is selected 32..126
-Font LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCount)
+RayFont LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCount)
 {
-    Font font = { 0 };
+    RayFont font = { 0 };
 
 #if defined(SUPPORT_FILEFORMAT_TTF)
     font.baseSize = fontSize;
@@ -364,7 +364,7 @@ Font LoadFontEx(const char *fileName, int fontSize, int *fontChars, int charsCou
 }
 
 // Load an Image font file (XNA style)
-Font LoadFontFromImage(Image image, Color key, int firstChar)
+RayFont LoadFontFromImage(Image image, Color key, int firstChar)
 {
 #ifndef MAX_GLYPHS_FROM_IMAGE
     #define MAX_GLYPHS_FROM_IMAGE   256     // Maximum number of glyphs supported on image scan
@@ -452,7 +452,7 @@ Font LoadFontFromImage(Image image, Color key, int firstChar)
     };
 
     // Create spritefont with all data parsed from image
-    Font font = { 0 };
+    RayFont font = { 0 };
 
     font.texture = LoadTextureFromImage(fontClear); // Convert processed image to OpenGL texture
     font.charsCount = index;
@@ -760,8 +760,8 @@ Image GenImageFontAtlas(const CharInfo *chars, Rectangle **charRecs, int charsCo
 }
 #endif
 
-// Unload Font from GPU memory (VRAM)
-void UnloadFont(Font font)
+// Unload RayFont from GPU memory (VRAM)
+void UnloadFont(RayFont font)
 {
     // NOTE: Make sure font is not default font (fallback)
     if (font.texture.id != GetFontDefault().texture.id)
@@ -793,7 +793,7 @@ void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
     {
         Vector2 position = { (float)posX, (float)posY };
 
-        int defaultFontSize = 10;   // Default Font chars height in pixel
+        int defaultFontSize = 10;   // Default RayFont chars height in pixel
         if (fontSize < defaultFontSize) fontSize = defaultFontSize;
         int spacing = fontSize/defaultFontSize;
 
@@ -802,7 +802,7 @@ void DrawText(const char *text, int posX, int posY, int fontSize, Color color)
 }
 
 // Draw one character (codepoint)
-void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float scale, Color tint)
+void DrawTextCodepoint(RayFont font, int codepoint, Vector2 position, float scale, Color tint)
 {
     // Character index position in sprite font
     // NOTE: In case a codepoint is not available in the font, index returned points to '?'
@@ -815,9 +815,9 @@ void DrawTextCodepoint(Font font, int codepoint, Vector2 position, float scale, 
     DrawTexturePro(font.texture, font.recs[index], rec, (Vector2){ 0, 0 }, 0.0f, tint);
 }
 
-// Draw text using Font
+// Draw text using RayFont
 // NOTE: chars spacing is NOT proportional to fontSize
-void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, float spacing, Color tint)
+void DrawTextEx(RayFont font, const char *text, Vector2 position, float fontSize, float spacing, Color tint)
 {
     int length = TextLength(text);      // Total length in bytes of the text, scanned by codepoints in loop
 
@@ -865,13 +865,13 @@ void DrawTextEx(Font font, const char *text, Vector2 position, float fontSize, f
 }
 
 // Draw text using font inside rectangle limits
-void DrawTextRec(Font font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint)
+void DrawTextRec(RayFont font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint)
 {
     DrawTextRecEx(font, text, rec, fontSize, spacing, wordWrap, tint, 0, 0, WHITE, WHITE);
 }
 
 // Draw text using font inside rectangle limits with support for text selection
-void DrawTextRecEx(Font font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint, int selectStart, int selectLength, Color selectTint, Color selectBackTint)
+void DrawTextRecEx(RayFont font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint, int selectStart, int selectLength, Color selectTint, Color selectBackTint)
 {
     int length = TextLength(text);      // Total length in bytes of the text, scanned by codepoints in loop
 
@@ -1013,7 +1013,7 @@ int MeasureText(const char *text, int fontSize)
     // Check if default font has been loaded
     if (GetFontDefault().texture.id != 0)
     {
-        int defaultFontSize = 10;   // Default Font chars height in pixel
+        int defaultFontSize = 10;   // Default RayFont chars height in pixel
         if (fontSize < defaultFontSize) fontSize = defaultFontSize;
         int spacing = fontSize/defaultFontSize;
 
@@ -1023,8 +1023,8 @@ int MeasureText(const char *text, int fontSize)
     return (int)vec.x;
 }
 
-// Measure string size for Font
-Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing)
+// Measure string size for RayFont
+Vector2 MeasureTextEx(RayFont font, const char *text, float fontSize, float spacing)
 {
     int len = TextLength(text);
     int tempLen = 0;                // Used to count longer text line num chars
@@ -1078,7 +1078,7 @@ Vector2 MeasureTextEx(Font font, const char *text, float fontSize, float spacing
 }
 
 // Returns index position for a unicode character on spritefont
-int GetGlyphIndex(Font font, int codepoint)
+int GetGlyphIndex(RayFont font, int codepoint)
 {
 #ifndef GLYPH_NOTFOUND_CHAR_FALLBACK    
     #define GLYPH_NOTFOUND_CHAR_FALLBACK     63      // Character used if requested codepoint is not found: '?'
@@ -1684,11 +1684,11 @@ static int GetLine(const char *origin, char *buffer, int maxLength)
 
 // Load a BMFont file (AngelCode font file)
 // REQUIRES: strstr(), sscanf(), strrchr(), memcpy()
-static Font LoadBMFont(const char *fileName)
+static RayFont LoadBMFont(const char *fileName)
 {
     #define MAX_BUFFER_SIZE     256
 
-    Font font = { 0 };
+    RayFont font = { 0 };
 
     char buffer[MAX_BUFFER_SIZE] = { 0 };
     char *searchPoint = NULL;
@@ -1811,7 +1811,7 @@ static Font LoadBMFont(const char *fileName)
         font = GetFontDefault();
         TRACELOG(LOG_WARNING, "FONT: [%s] Failed to load texture, reverted to default font", fileName);
     }
-    else TRACELOG(LOG_INFO, "FONT: [%s] Font loaded successfully", fileName);
+    else TRACELOG(LOG_INFO, "FONT: [%s] RayFont loaded successfully", fileName);
 
     return font;
 }

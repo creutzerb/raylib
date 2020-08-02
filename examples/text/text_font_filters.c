@@ -1,6 +1,6 @@
 /*******************************************************************************************
 *
-*   raylib [text] example - Font filters
+*   raylib [text] example - RayFont filters
 *
 *   After font loading, font texture atlas filter could be configured for a softer
 *   display of the font when scaling it to different sizes, that way, it's not required
@@ -24,12 +24,12 @@ int main(void)
 
     InitWindow(screenWidth, screenHeight, "raylib [text] example - font filters");
 
-    const char msg[50] = "Loaded Font";
+    const char msg[50] = "Loaded RayFont";
 
     // NOTE: Textures/Fonts MUST be loaded after Window initialization (OpenGL context is required)
 
-    // TTF Font loading with custom generation parameters
-    Font font = LoadFontEx("resources/KAISG.ttf", 96, 0, 0);
+    // TTF RayFont loading with custom generation parameters
+    RayFont font = LoadFontEx("resources/KAISG.ttf", 96, 0, 0);
 
     // Generate mipmap levels to use trilinear filtering
     // NOTE: On 2D drawing it won't be noticeable, it looks like FILTER_BILINEAR
@@ -109,7 +109,7 @@ int main(void)
             //DrawRectangleLines(fontPosition.x, fontPosition.y, textSize.x, textSize.y, RED);
 
             DrawRectangle(0, screenHeight - 80, screenWidth, 80, LIGHTGRAY);
-            DrawText(FormatText("Font size: %02.02f", fontSize), 20, screenHeight - 50, 10, DARKGRAY);
+            DrawText(FormatText("RayFont size: %02.02f", fontSize), 20, screenHeight - 50, 10, DARKGRAY);
             DrawText(FormatText("Text size: [%02.02f, %02.02f]", textSize.x, textSize.y), 20, screenHeight - 30, 10, DARKGRAY);
             DrawText("CURRENT TEXTURE FILTER:", 250, 400, 20, GRAY);
 
@@ -125,7 +125,7 @@ int main(void)
     //--------------------------------------------------------------------------------------
     ClearDroppedFiles();        // Clear internal buffers
 
-    UnloadFont(font);           // Font unloading
+    UnloadFont(font);           // RayFont unloading
 
     CloseWindow();              // Close window and OpenGL context
     //--------------------------------------------------------------------------------------

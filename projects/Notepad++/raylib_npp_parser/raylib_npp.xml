@@ -79,6 +79,9 @@
         <KeyWord name="GetScreenHeight" func="yes">
             <Overload retVal="int" descr="Get current screen height"></Overload>
         </KeyWord>
+        <KeyWord name="GetNativeWindowX11" func="yes">
+            <Overload retVal="int" descr="Get native window"></Overload>
+        </KeyWord>
         <KeyWord name="GetMonitorCount" func="yes">
             <Overload retVal="int" descr="Get number of connected monitors"></Overload>
         </KeyWord>
@@ -1227,7 +1230,7 @@
         </KeyWord>
         <KeyWord name="ImageTextEx" func="yes">
             <Overload retVal="Image" descr="Create an image from text (custom sprite font)">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="float fontSize" />
                 <Param name="float spacing" />
@@ -1271,7 +1274,7 @@
             <Overload retVal="void" descr="Draw text (custom sprite font) within an image (destination)">
                 <Param name="Image *dst" />
                 <Param name="Vector2 position" />
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="float fontSize" />
                 <Param name="float spacing" />
@@ -1484,20 +1487,20 @@
         </KeyWord>
 
         <!-------------------------------------------------------------------------------------- -->
-        <!-- Font Loading and Text Drawing Functions (Module: text) -->
+        <!-- RayFont Loading and Text Drawing Functions (Module: text) -->
         <!-------------------------------------------------------------------------------------- -->
 
-        <!-- Font loading/unloading functions -->
+        <!-- RayFont loading/unloading functions -->
         <KeyWord name="GetFontDefault" func="yes">
-            <Overload retVal="Font" descr="Get the default Font"></Overload>
+            <Overload retVal="RayFont" descr="Get the default RayFont"></Overload>
         </KeyWord>
         <KeyWord name="LoadFont" func="yes">
-            <Overload retVal="Font" descr="Load font from file into GPU memory (VRAM)">
+            <Overload retVal="RayFont" descr="Load font from file into GPU memory (VRAM)">
                 <Param name="const char *fileName" />
             </Overload>
         </KeyWord>
         <KeyWord name="LoadFontEx" func="yes">
-            <Overload retVal="Font" descr="Load font from file with extended parameters">
+            <Overload retVal="RayFont" descr="Load font from file with extended parameters">
                 <Param name="const char *fileName" />
                 <Param name="int fontSize" />
                 <Param name="int *fontChars" />
@@ -1505,7 +1508,7 @@
             </Overload>
         </KeyWord>
         <KeyWord name="LoadFontFromImage" func="yes">
-            <Overload retVal="Font" descr="Load font from Image (XNA style)">
+            <Overload retVal="RayFont" descr="Load font from Image (XNA style)">
                 <Param name="Image image" />
                 <Param name="Color key" />
                 <Param name="int firstChar" />
@@ -1531,8 +1534,8 @@
             </Overload>
         </KeyWord>
         <KeyWord name="UnloadFont" func="yes">
-            <Overload retVal="void" descr="Unload Font from GPU memory (VRAM)">
-                <Param name="Font font" />
+            <Overload retVal="void" descr="Unload RayFont from GPU memory (VRAM)">
+                <Param name="RayFont font" />
             </Overload>
         </KeyWord>
 
@@ -1554,7 +1557,7 @@
         </KeyWord>
         <KeyWord name="DrawTextEx" func="yes">
             <Overload retVal="void" descr="Draw text using font and additional parameters">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="Vector2 position" />
                 <Param name="float fontSize" />
@@ -1564,7 +1567,7 @@
         </KeyWord>
         <KeyWord name="DrawTextRec" func="yes">
             <Overload retVal="void" descr="Draw text using font inside rectangle limits">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="Rectangle rec" />
                 <Param name="float fontSize" />
@@ -1573,10 +1576,10 @@
                 <Param name="Color tint" />
             </Overload>
         </KeyWord>
-        <!--RLAPI void DrawTextRecEx(Font font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint, int selectStart, int selectLength, Color selectTint, Color selectBackTint); // Draw text using font inside rectangle limits with support for text selection -->
+        <!--RLAPI void DrawTextRecEx(RayFont font, const char *text, Rectangle rec, float fontSize, float spacing, bool wordWrap, Color tint, int selectStart, int selectLength, Color selectTint, Color selectBackTint); // Draw text using font inside rectangle limits with support for text selection -->
         <KeyWord name="DrawTextCodepoint" func="yes">
             <Overload retVal="void" descr="Draw one character (codepoint)">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="int codepoint" />
                 <Param name="Vector2 position" />
                 <Param name="float scale" />
@@ -1592,8 +1595,8 @@
             </Overload>
         </KeyWord>
         <KeyWord name="MeasureTextEx" func="yes">
-            <Overload retVal="Vector2" descr="Measure string size for Font">
-                <Param name="Font font" />
+            <Overload retVal="Vector2" descr="Measure string size for RayFont">
+                <Param name="RayFont font" />
                 <Param name="const char *text" />
                 <Param name="float fontSize" />
                 <Param name="float spacing" />
@@ -1601,7 +1604,7 @@
         </KeyWord>
         <KeyWord name="GetGlyphIndex" func="yes">
             <Overload retVal="int" descr="Get index position for a unicode character on font">
-                <Param name="Font font" />
+                <Param name="RayFont font" />
                 <Param name="int codepoint" />
             </Overload>
         </KeyWord>

@@ -33,7 +33,7 @@ int main(void)
     const char msg[50] = "Signed Distance Fields";
 
     // Default font generation from TTF font
-    Font fontDefault = { 0 };
+    RayFont fontDefault = { 0 };
     fontDefault.baseSize = 16;
     fontDefault.charsCount = 95;
     // Parameters > font size: 16, no chars array provided (0), chars count: 95 (autogenerate chars array)
@@ -44,7 +44,7 @@ int main(void)
     UnloadImage(atlas);
 
     // SDF font generation from TTF font
-    Font fontSDF = { 0 };
+    RayFont fontSDF = { 0 };
     fontSDF.baseSize = 16;
     fontSDF.charsCount = 95;
     // Parameters > font size: 16, no chars array provided (0), chars count: 0 (defaults to 95)

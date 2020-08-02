@@ -158,9 +158,9 @@ int main(int argc, char **argv)
     // Load the font resources
     // NOTE: fontAsian is for asian languages,
     // fontEmoji is the emojis and fontDefault is used for everything else
-    Font fontDefault = LoadFont("resources/dejavu.fnt");
-    Font fontAsian = LoadFont("resources/noto_cjk.fnt");
-    Font fontEmoji = LoadFont("resources/symbola.fnt");
+    RayFont fontDefault = LoadFont("resources/dejavu.fnt");
+    RayFont fontAsian = LoadFont("resources/noto_cjk.fnt");
+    RayFont fontEmoji = LoadFont("resources/symbola.fnt");
 
     Vector2 hoveredPos = { 0.0f, 0.0f };
     Vector2 selectedPos = { 0.0f, 0.0f };
@@ -227,7 +227,7 @@ int main(int argc, char **argv)
             {
                 const int message = emoji[selected].message;
                 const int horizontalPadding = 20, verticalPadding = 30;
-                Font *font = &fontDefault;
+                RayFont *font = &fontDefault;
 
                 // Set correct font for asian languages
                 if (TextIsEqual(messages[message].language, "Chinese") ||
