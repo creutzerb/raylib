@@ -1,3 +1,22 @@
+in order to make raylib compatible with https://github.com/ApoorvaJ/EasyTab on linux
+- rename Fonts to RayFonts to #define GLFW_EXPOSE_NATIVE_X11 (Exposing Xlib.h > X.h results in dup symbols for Font type)
+- new func : GetNativeWindowX11 to access the native window (GetWindowHandle not implemented for X11 in original raylib)
+- new struct Point 
+- new struct Stroke in CoreData
+- functions : stroke_append, next_stroke_point, get_points_in_stroke
+
+search "// easytab" in core.c for most of the changes
+
+how it works : 
+check the events for the tablet inputs before rlgw consumes them with XNextEvent
+  go through the events with XNextEvent
+  XPutBackEvent after I'm done with them and call glfwPollEvents
+ 
+ know issues : 
+ - tablet needs to be plugged in when app starts
+ - forgot to call EasyTab_Unload(disp);
+ - if the events are not consumed with next_stroke_point, they keep stacking
+
 <img align="left" src="https://github.com/raysan5/raylib/blob/master/logo/raylib_256x256.png" width=256>
 
 **raylib is a simple and easy-to-use library to enjoy videogames programming.**
