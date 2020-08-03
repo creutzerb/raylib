@@ -868,7 +868,9 @@ extern "C" {            // Prevents name mangling of functions
 // Window-related functions
 RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
 RLAPI bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
+RLAPI void SetEasytabState(bool new_state);                       // enable or disable tablet data polling (default:false(disabled))
 RLAPI void next_stroke_point(Vector3 *point);                     // get the next stroke point info and removes it
+RLAPI void peek_stroke_point(Vector3 *point);                     // get the next stroke point info
 RLAPI int get_points_in_stroke(void);                             // get the numbers of stylus points since last frame
 RLAPI void CloseWindow(void);                                     // Close window and unload OpenGL context
 RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully

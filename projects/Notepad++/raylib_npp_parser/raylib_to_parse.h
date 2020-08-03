@@ -5,9 +5,11 @@
 // Window-related functions
 RLAPI void InitWindow(int width, int height, const char *title);  // Initialize window and OpenGL context
 RLAPI bool WindowShouldClose(void);                               // Check if KEY_ESCAPE pressed or Close icon pressed
+RLAPI void SetEasytabState(bool new_state);                       // enable or disable tablet data polling (default:false(disabled))
 RLAPI void next_stroke_point(Vector3 *point);                     // get the next stroke point info and removes it
+RLAPI void peek_stroke_point(Vector3 *point);                     // get the next stroke point info
 RLAPI int get_points_in_stroke(void);                             // get the numbers of stylus points since last frame
-RLAPI int CloseWindow(void);                                     // Close window and unload OpenGL context
+RLAPI int CloseWindow(void);                                      // Close window and unload OpenGL context
 RLAPI bool IsWindowReady(void);                                   // Check if window has been initialized successfully
 RLAPI bool IsWindowMinimized(void);                               // Check if window has been minimized (or lost focus)
 RLAPI bool IsWindowResized(void);                                 // Check if window has been resized
@@ -24,7 +26,7 @@ RLAPI void SetWindowSize(int width, int height);                  // Set window 
 RLAPI void *GetWindowHandle(void);                                // Get native window handle
 RLAPI int GetScreenWidth(void);                                   // Get current screen width
 RLAPI int GetScreenHeight(void);                                  // Get current screen height
-RLAPI int GetNativeWindowX11(void);                                  // Get native window handle
+RLAPI int GetNativeWindowX11(void);                               // Get native window handle
 RLAPI int GetMonitorCount(void);                                  // Get number of connected monitors
 RLAPI int GetMonitorWidth(int monitor);                           // Get primary monitor width
 RLAPI int GetMonitorHeight(int monitor);                          // Get primary monitor height

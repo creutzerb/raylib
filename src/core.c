@@ -206,7 +206,7 @@ unsigned int __stdcall timeEndPeriod(unsigned int uPeriod);
 //#define GLFW_EXPOSE_NATIVE_MIR
 #include <GLFW/glfw3native.h>  // Required for: glfwGetX11Window()
 
-//easytab
+// easytab
 #define EASYTAB_IMPLEMENTATION
 #include "external/easytab.h"
 
@@ -488,6 +488,7 @@ typedef struct CoreData
         struct Point *oldPoint;
         struct Point *newPoint;
         int nb_point;
+        bool active;
     }Stroke;
 
 } CoreData;
@@ -803,12 +804,17 @@ void InitWindow(int width, int height, const char *title)
 #endif // PLATFORM_ANDROID
 
 // easytab
+    CORE.Stroke.active = false;
 	Display* disp = glfwGetX11Display();
 	Window win = GetNativeWindowX11();
 	if (EasyTab_Load(disp, win) != EASYTAB_OK)
 		printf("raylib :Tablet init FAILURE\n");
 	else
 		printf("raylib :Tablet init SUCCESS\n");
+}
+
+void SetEasytabState(bool new_state){
+    CORE.Stroke.active = new_state;
 }
 
 // easytab
@@ -858,6 +864,13 @@ void next_stroke_point(Vector3 *point){
 }
 
 // easytab
+void peek_stroke_point(Vector3 *point){
+    point->x = CORE.Stroke.oldPoint->x;
+    point->y = CORE.Stroke.oldPoint->y;
+    point->z = CORE.Stroke.oldPoint->pressure;
+}
+
+// easytab
 int get_points_in_stroke(void){
     return CORE.Stroke.nb_point;
 }
@@ -865,6 +878,11 @@ int get_points_in_stroke(void){
 // Close window and unload OpenGL context
 void CloseWindow(void)
 {
+
+// easytab
+	Display* disp = glfwGetX11Display();
+	EasyTab_Unload(disp);
+
 #if defined(SUPPORT_GIF_RECORDING)
     if (gifRecording)
     {
@@ -3929,30 +3947,32 @@ static void PollInputEvents(void)
 */
 
 // easytab : save input events
-    Display* disp = glfwGetX11Display();
-    if (XPending(disp)) {
-        /* next event consumes the event
-            * so we store the events in
-            * in a list
-            */
-        const int size = XPending(disp);
-        XEvent events[size];
+    if (CORE.Stroke.active){
+        Display* disp = glfwGetX11Display();
+        if (XPending(disp)) {
+            /* next event consumes the event
+                * so we store the events in
+                * in a list
+                */
+            const int size = XPending(disp);
+            XEvent events[size];
 
-        for (int i = 0; i < size; i++) {
+            for (int i = 0; i < size; i++) {
 
-            XNextEvent(disp, &(events[i]));
-            // is the event relevant to us
-            if (EasyTab_HandleEvent(&(events[i])) == EASYTAB_OK) {
-                //					printf("EasyTab %d %d %f  events:%d\n", EasyTab->PosX, EasyTab->PosX, EasyTab->Pressure, XPending(disp));
-                stroke_append(EasyTab->PosX, EasyTab->PosY, EasyTab->Pressure);
+                XNextEvent(disp, &(events[i]));
+                // is the event relevant to us
+                if (EasyTab_HandleEvent(&(events[i])) == EASYTAB_OK) {
+                    //					printf("EasyTab %d %d %f  events:%d\n", EasyTab->PosX, EasyTab->PosX, EasyTab->Pressure, XPending(disp));
+                    stroke_append(EasyTab->PosX, EasyTab->PosY, EasyTab->Pressure);
+                }
             }
-        }
 
-        // put back the events in reverse
-        // so that raylib gets the events too
-        // WARNING : does raylib consumes some on my events ?
-        for (int i = size - 1; i >= 0; i--) {
-                XPutBackEvent(disp, &(events[i]));
+            // put back the events in reverse
+            // so that raylib gets the events too
+            // WARNING : does raylib consumes some on my events ?
+            for (int i = size - 1; i >= 0; i--) {
+                    XPutBackEvent(disp, &(events[i]));
+            }
         }
     }
     glfwPollEvents();

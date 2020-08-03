@@ -1,7 +1,9 @@
 # format=pipe 
 InitWindow|void|(int width, int height, const char *title);|
 WindowShouldClose|bool|(void);|
+SetEasytabState|void|(bool);|
 next_stroke_point|void|(void);|
+peek_stroke_point|void|(void);|
 get_points_in_stroke|int|(Vector3 *point);|
 CloseWindow|void|(void);|
 IsWindowReady|bool|(void);|
