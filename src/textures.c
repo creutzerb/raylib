@@ -2787,6 +2787,20 @@ RenderTexture2D LoadRenderTexture(int width, int height)
     return target;
 }
 
+RenderTexture2D LoadRenderTextureNoAlpha(int width, int height)
+{
+    RenderTexture2D target = rlLoadRenderTexture(width, height, UNCOMPRESSED_R8G8B8, 24, false);
+
+    return target;
+}
+
+RenderTexture2D LoadRenderTextureAlphaOnly(int width, int height)
+{
+    RenderTexture2D target = rlLoadRenderTexture(width, height, UNCOMPRESSED_GRAY_ALPHA, 24, false);
+
+    return target;
+}
+
 // Unload texture from GPU memory (VRAM)
 void UnloadTexture(Texture2D texture)
 {
